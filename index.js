@@ -7,6 +7,8 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const Blog = require('./models/blogs')
 
+const logger = require('./utils/logger')
+
 const config = require('./utils/config')
 
 mongoose.connect(config.MONGODB_URI)
@@ -33,5 +35,5 @@ app.post('/api/blogs', (request, response) => {
 })
 
 app.listen(config.PORT, () => {
-  console.log(`Server running on port ${config.PORT}`)
+  logger.info(`Server running on port ${config.PORT}`)
 })
