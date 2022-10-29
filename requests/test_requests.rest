@@ -1,0 +1,13 @@
+GET http://localhost:3001/api/blogs
+
+###
+
+POST http://localhost:3001/api/blogs/ HTTP/1.1
+content-type: application/json
+
+{
+  "title": "Testiblogi",
+  "author": "Leevi",
+  "url": "www.leevi.com",
+  "likes": 1000000000000
+}
