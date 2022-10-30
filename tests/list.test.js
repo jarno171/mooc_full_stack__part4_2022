@@ -144,5 +144,28 @@ describe("most blogs", () => {
       blogs: 2
     } )
   })
-  
+})
+
+describe('most likes', () => {
+
+  test('empty bloglist should return empty object', () => {
+    const result = listHelper.mostLikes(emptyListOfBlogs)
+    expect(result).toEqual( { } )
+  })
+
+  test('bloglist of one author/blog should return that blogs likes', () => {
+    const result = listHelper.mostLikes(oneBlog)
+    expect(result).toEqual( { 
+      author: 'Edsger W. Dijkstra',
+      likes: 5
+    } )
+  })
+
+  test('most likes of multiple blogs', () => {
+    const result = listHelper.mostLikes(listOfBlogs)
+    expect(result).toEqual( { 
+      author: 'Leevi L. Leevinen',
+      likes: 55000
+    } )
+  })
 })
