@@ -81,6 +81,20 @@ test('a valid blog can be added', async () => {
   )
 })
 
+test('blog without likes gets 0 likes', async () => {
+  const newBlog = {
+    title: 'Testien blogi, testausta, likes',
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  expect(response.body.likes).toBe(0)
+})
+
 test('blog without content is not added', async () => {
   const newBlog = {
     likes: 8878
