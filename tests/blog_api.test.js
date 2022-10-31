@@ -132,6 +132,25 @@ test('blog without title responds with 400', async () => {
   expect(response.body).toHaveLength(initialBlogs.length)
 })
 
+test('deletion of a blog', async () => {
+  const blogsAtStart = (await api.get('/api/blogs')).body
+  const blogsToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogsToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = (await api.get('/api/blogs')).body
+
+  expect(blogsAtEnd).toHaveLength(
+    blogsAtStart.length - 1
+  )
+
+  const titles = blogsAtEnd.map(r => r.title)
+
+  expect(titles).not.toContain(blogsToDelete.title)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })

@@ -11,3 +11,6 @@ content-type: application/json
   "url": "www.leevi.com",
   "likes": 1000000000000
 }
+
+###
+DELETE http://localhost:3001/api/blogs/635ff8576c597973c0040eac
