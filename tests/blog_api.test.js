@@ -62,6 +62,8 @@ test('a specific blog is within the returned blogs', async () => {
 test('a valid blog can be added', async () => {
   const newBlog = {
     title: 'Testien blogi, testausta',
+    author: "testaust",
+    url: "www.moi.fi",
     likes: 124,
   }
 
@@ -84,6 +86,7 @@ test('a valid blog can be added', async () => {
 test('blog without likes gets 0 likes', async () => {
   const newBlog = {
     title: 'Testien blogi, testausta, likes',
+    url: "www.com"
   }
 
   const response = await api
@@ -95,8 +98,27 @@ test('blog without likes gets 0 likes', async () => {
   expect(response.body.likes).toBe(0)
 })
 
-test('blog without content is not added', async () => {
+test('blog without url responds with 400', async () => {
   const newBlog = {
+    title: "testausblogi",
+    author: "otokka",
+    likes: 8878
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+
+  const response = await api.get('/api/blogs')
+
+  expect(response.body).toHaveLength(initialBlogs.length)
+})
+
+test('blog without title responds with 400', async () => {
+  const newBlog = {
+    url: "www.com",
+    author: "otokka",
     likes: 8878
   }
 
