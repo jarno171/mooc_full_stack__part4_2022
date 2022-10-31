@@ -36,6 +36,14 @@ test('blogs are returned as json', async () => {
       .expect('Content-Type', /application\/json/)
   }, 100000)
 
+test('variable id is named id, not _id', async () => {
+  const response = await api.get('/api/blogs')
+
+  response.body.map((blog) => {
+    expect(blog.id).toBeDefined()
+  })
+})
+
 test('all blogs are returned', async () => {
   const response = await api.get('/api/blogs')
 
