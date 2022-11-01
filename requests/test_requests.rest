@@ -14,3 +14,16 @@ content-type: application/json
 
 ###
 DELETE http://localhost:3001/api/blogs/635ff8576c597973c0040eac
+
+###
+POST http://localhost:3001/api/users HTTP/1.1
+content-type: application/json
+
+{
+  "username": "testinen",
+  "name": "testinen testi",
+  "password": "123321"
+}
+
+###
+GET http://localhost:3001/api/users
