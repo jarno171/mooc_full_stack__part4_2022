@@ -3,6 +3,8 @@ const supertest = require('supertest')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const _ = require('lodash')
+const helper = require('./test_user_helper')
 
 const initialBlogs = [
   {
@@ -27,6 +29,16 @@ beforeEach(async () => {
 
   blogObject = new Blog(initialBlogs[1])
   await blogObject.save()
+
+  const newUser = {
+    username: 'testuser',
+    name: 'Tester Tester',
+    password: '12345',
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
 })
 
 describe('get', () => {
@@ -68,9 +80,12 @@ describe('post', () => {
       url: "www.com"
     }
 
+    const testUserToken = await helper.loginToken("testuser", "12345")
+
     const response = await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization: testUserToken })
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
@@ -84,9 +99,12 @@ describe('post', () => {
       likes: 8878
     }
 
+    const testUserToken = await helper.loginToken("testuser", "12345")
+
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization: testUserToken })
       .expect(400)
 
     const response = await api.get('/api/blogs')
@@ -101,9 +119,12 @@ describe('post', () => {
       likes: 8878
     }
 
+    const testUserToken = await helper.loginToken("testuser", "12345")
+
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization: testUserToken })
       .expect(400)
 
     const response = await api.get('/api/blogs')
@@ -142,10 +163,13 @@ describe('addition of a new blog', () => {
       url: "www.moi.fi",
       likes: 124,
     }
+
+    const testUserToken = await helper.loginToken("testuser", "12345")
   
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization: testUserToken })
       .expect(201)
       .expect('Content-Type', /application\/json/)
   
@@ -166,9 +190,12 @@ describe('addition of a new blog', () => {
       likes: 123
     }
 
+    const testUserToken = await helper.loginToken("testuser", "12345")
+
     await api
       .post('/api/blogs')
       .send(newBlog)
+      .set({ Authorization: testUserToken })
       .expect(400)
 
     const blogsAtEnd = (await api.get('/api/blogs')).body
