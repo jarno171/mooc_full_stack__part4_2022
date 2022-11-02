@@ -1,10 +1,14 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 blogsRouter.get('/', async (request, response) => {
 
-  const notes = await Blog.find( { } )
-  response.json(notes)
+  const blogs = await Blog
+    .find( { } )
+    .populate('user')
+
+  response.json(blogs)
 })
 
 blogsRouter.get('/:id', async (request, response) => {
@@ -23,11 +27,25 @@ blogsRouter.get('/:id', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response, next) => {
-  const blog = new Blog(request.body)
+
+  //const user = await User.findById(body.userId)
+  //https://stackoverflow.com/questions/12467102/how-to-get-the-latest-and-oldest-record-in-mongoose-js-or-just-the-timespan-bet
+  const user = await User.findOne().sort({ field: 'asc', _id: -1 }).limit(1)
+
+  const blog = new Blog( { 
+    title: request.body.title,
+    author: request.body.author,
+    url: request.body.url,
+    likes: request.body.likes,
+    user: user._id
+   } )
 
   try {
     const savedBlog = await blog.save()
     response.status(201).json(savedBlog)
+
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
   } catch(exception) {
     next(exception)
   }
