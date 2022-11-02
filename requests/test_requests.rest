@@ -1,6 +1,9 @@
 GET http://localhost:3001/api/blogs
 
 ###
+GET http://localhost:3001/api/users
+
+###
 POST http://localhost:3001/api/blogs/ HTTP/1.1
 content-type: application/json
 
@@ -24,6 +27,16 @@ content-type: application/json
   "password": "123321"
 }
 
+
+###
+POST http://localhost:3001/api/login HTTP/1.1
+content-type: application/json
+
+{
+  "username": "testinen",
+  "password": "123321"
+}
+
 ###
 POST http://localhost:3001/api/users HTTP/1.1
 content-type: application/json
@@ -33,6 +46,3 @@ content-type: application/json
   "name": "te",
   "password": "123321"
 }
-
-###
-GET http://localhost:3001/api/users
