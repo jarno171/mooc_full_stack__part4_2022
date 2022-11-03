@@ -24,11 +24,7 @@ const initialBlogs = [
 beforeEach(async () => {
   await Blog.deleteMany({})
 
-  let blogObject = new Blog(initialBlogs[0])
-  await blogObject.save()
-
-  blogObject = new Blog(initialBlogs[1])
-  await blogObject.save()
+  const testUserToken = await helper.loginToken("testuser", "12345")
 
   const newUser = {
     username: 'testuser',
@@ -39,6 +35,16 @@ beforeEach(async () => {
   await api
     .post('/api/users')
     .send(newUser)
+
+  await api
+    .post('/api/blogs')
+    .send(initialBlogs[0])
+    .set({ Authorization: testUserToken })
+
+  await api
+    .post('/api/blogs')
+    .send(initialBlogs[1])
+    .set({ Authorization: testUserToken })
 })
 
 describe('get', () => {
@@ -139,8 +145,11 @@ describe('deletion', () => {
     const blogsAtStart = (await api.get('/api/blogs')).body
     const blogsToDelete = blogsAtStart[0]
 
+    const testUserToken = await helper.loginToken("testuser", "12345")
+
     await api
       .delete(`/api/blogs/${blogsToDelete.id}`)
+      .set({ Authorization: testUserToken })
       .expect(204)
 
     const blogsAtEnd = (await api.get('/api/blogs')).body
