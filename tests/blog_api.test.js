@@ -130,7 +130,7 @@ describe('post', () => {
     await api
       .post('/api/blogs')
       .send(newBlog)
-      .set({ Authorization: testUserToken })
+      //.set({ Authorization: testUserToken })
       .expect(400)
 
     const response = await api.get('/api/blogs')
